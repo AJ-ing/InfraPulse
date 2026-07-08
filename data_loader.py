@@ -3,7 +3,7 @@ import streamlit as st
 from pathlib import Path
 
 # --- CONFIG ---
-ROOT_DIR = Path(__file__).parent.parent
+ROOT_DIR = Path(__file__).parent
 CSV_PATH = str(ROOT_DIR / "data" / "processed" / "bridges_risk_scored.csv")
 ID_COL = "Name"
 RISK_COL = "risk_score"
