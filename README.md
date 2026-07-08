@@ -5,8 +5,9 @@
 A solo capstone project that scores and ranks 6,554 Victorian bridges by risk, to
 support maintenance and investment prioritisation decisions. Built as a
 deliberately minimal, local-first application: a batch pipeline writes flat CSV
-outputs, consumed by a read-only Streamlit dashboard. No cloud dependency, no
-authentication, no real-time components, by design.
+outputs, consumed by a Streamlit dashboard.
+
+📖 **[Read the full INFRAPULSE Report](https://drive.google.com/file/d/1jgb1I8K_HdRcNJMNlTotnOt3tq9yNgjM/view?usp=sharing)**
 
 ## Screenshots
 
