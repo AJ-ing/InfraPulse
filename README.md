@@ -16,9 +16,6 @@ authentication, no real-time components, by design.
 **Risk map, colored by tier**
 ![Risk map](assets/screenshots/02_risk_map.png)
 
-**Filters narrowing the dataset (region, road class, risk tier) — all three views update together**
-![Filters in action](assets/screenshots/03_filters_in_action.png)
-
 ## Architecture
 
 ```
