@@ -28,10 +28,6 @@ st.sidebar.caption(f"{len(filtered):,} of {len(df):,} bridges shown")
 
 # --- Main App ---
 st.title("Dashboard")
-
-st.image("assets/bridge_header.png", use_container_width=True)
-st.markdown("[📖 Read the full INFRAPULSE Report](https://drive.google.com/file/d/1jgb1I8K_HdRcNJMNlTotnOt3tq9yNgjM/view?usp=sharing)")
-
 col1, col2, col3 = st.columns(3)
 col1.metric("Bridges shown", f"{len(filtered):,}")
 if not filtered.empty:

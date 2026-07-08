@@ -12,6 +12,9 @@ df = load_data()
 st.title("InfraPulse")
 st.subheader("Infrastructure Asset Risk and Investment Decision Support")
 
+st.image("assets/bridge_header.png", width='stretch')
+st.markdown("[📖 Read the full INFRAPULSE Report](https://drive.google.com/file/d/1jgb1I8K_HdRcNJMNlTotnOt3tq9yNgjM/view?usp=sharing)")
+
 st.write(
     "Victoria's own 2011 Auditor-General review found that maintenance funding for "
     "road bridges was running at roughly half of annual depreciation, even as over "
