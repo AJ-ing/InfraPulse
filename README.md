@@ -102,6 +102,33 @@ explicitly **not** a trained predictive model:
 Likelihood      = age (45%) + traffic (30%) + climate (25%)
                   reweighted proportionally when a component is missing
 
+The architecture is deliberately minimal: a batch pipeline writes a flat CSV,
+and a read-only Streamlit dashboard consumes it. No cloud dependency, no
+authentication, and no live API calls from the app itself — every number on
+screen traces back to a pre-computed file, not a runtime request.
+
+## Data sources
+
+- **Bridge registry** — Transport Victoria open data portal, 6,554 bridges after
+  cleaning, including a fix for 61 construction-year values that had been
+  misclassified as unknown due to inconsistent date formats.
+- **Weather** — Open-Meteo Historical Weather API, grid-deduplicated at 0.25°
+  resolution.
+- **Traffic** — TIRTL 15-minute sensor data from 406 Melbourne freeway sites,
+  Austroads vehicle classes 3–12 treated as heavy vehicles, spatially joined to
+  the nearest bridge.
+- **Condition data** — attempted via three independent sources; all three
+  proved unusable (see *Known limitations*).
+
+## Risk scoring methodology
+
+A transparent, rule-based multi-criteria score (0–100, min-max rescaled) —
+explicitly **not** a trained predictive model:
+
+```
+Likelihood      = age (45%) + traffic (30%) + climate (25%)
+                  reweighted proportionally when a component is missing
+
 Consequence     = multiplier from road/state class (CD_STATE_CLASS)
                   HF = 1.5   MR = 1.2   TR = 1.1   RA / FR / unknown = 1.0
 
@@ -135,6 +162,34 @@ score.
 Expand InfraPulse beyond public infrastructure to support data centre asset management and strategic planning. The platform would monitor key operational metrics such as Power Usage Effectiveness (PUE), energy consumption, cooling efficiency, carbon emissions, and equipment health through real-time analytics and predictive AI.
 
 By integrating electricity pricing, renewable energy availability, climate conditions, fibre connectivity, land availability, and demand forecasts, InfraPulse could also recommend optimal locations for future data centre developments, enabling organisations to improve operational efficiency while supporting sustainable digital infrastructure.
+
+Consequence     = multiplier from road/state class (CD_STATE_CLASS)
+                  HF = 1.5   MR = 1.2   TR = 1.1   RA / FR / unknown = 1.0
+
+Risk score      = Likelihood × Consequence, rescaled to 0–100
+```
+
+The weighting is grounded in the sector's own findings, not chosen arbitrarily
+— the 45% age weight mirrors the same 30–60-year repair-window statistic
+Victoria's Auditor-General uses as a headline risk indicator, and the climate
+feature specifically targets extreme-rainfall days rather than total rainfall,
+because average rainfall has been *declining* in Victoria even as extreme
+rainfall intensity rises. Full reasoning, with citations, is on the in-app
+**Methodology** page and in `docs/infrapulse_vic_briefing.md`.
+
+## Known limitations
+
+The original design planned to use physical condition ratings as a model
+input. That plan was abandoned after three separate sourcing attempts failed:
+the legacy VicRoads "Bridge Structures" dataset was confirmed dead, the Vicmap
+Transport ArcGIS FeatureServer's condition field returned near-zero variance,
+and an AURIN portal download intended for Victoria returned Western
+Australia's data instead. Victoria's own 2011 Auditor-General audit found
+condition-rating data inconsistent and unreliable sector-wide, independent of
+this project — which is the basis for treating the pivot to rule-based scoring
+as a methodologically sound choice, not a fallback. The `physical_condition`
+field is retained in the dataset for reference only and does not feed the
+score.
 
 ## Tech stack
 
