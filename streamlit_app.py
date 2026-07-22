@@ -9,6 +9,7 @@ pages = {
     ],
     "Analytics": [
         st.Page("pages/dashboard.py", title="Dashboard", icon="📊"),
+        st.Page("pages/sandbox.py", title="What-If Sandbox", icon="🧪"),
     ]
 }
 
