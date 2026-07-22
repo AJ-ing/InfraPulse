@@ -43,8 +43,10 @@ highest-risk ones, and let filtering narrow the view by region or road class.
 - **Interactive risk map** — colored by risk tier, colorblind-safe palette with
   text labels, not color alone.
 - **Ranked table** — top-risk bridges surfaced first, filterable.
-- **Live filters** — region, road/state class, and risk tier, all genuinely
-  linked across the KPI row, map, and table (not three independent views).
+- **Live filters** — region, road/state class, risk tier, inspection priority, and flood history.
+- **Inspection Priority** — maps risk score to standard 3-tier inspection cadences.
+- **Interactive Sandbox** — dynamically adjust likelihood weights (Age, Traffic, Climate) to see real-time what-if impacts on the risk scores.
+- **PDF Export** — generate and download static reports for the current filtered region view or individual bridge profiles.
 - **In-app methodology page** — documents data sources, the scoring formula,
   and — deliberately — the data-quality failures that shaped the design.
 

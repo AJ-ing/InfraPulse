@@ -93,6 +93,18 @@ choice, not a fallback forced by missing data.
 """
 )
 
+st.header("Tier 1 Extensions (July 2026)")
+st.markdown(
+    """
+    Recent additions to the dashboard follow the same rule-based, deterministic philosophy:
+    
+    - **Inspection Priority Mapping:** `risk_score` is mapped to three inspection priority tiers based on the real VicRoads regime (Level 1: annual/biannual for scores ≥70, Level 2: 3–5 year cycle for scores 40-69, Level 3: as-needed for scores <40). This is a transparent grouping mechanism, not a predictive inspection model.
+    - **What-If Sandbox:** Users can dynamically adjust the formula weights for Age, Traffic, and Climate in the Sandbox page. This operates purely in-memory to let users explore sensitivities without altering the batch-processed production scores.
+    - **Timber/Material Flag (Parked):** ALGA's 2018 *State of the Assets* report identified that 21% of timber bridges were in poor condition compared to just 4% for concrete. However, an investigation of the registry revealed no usable construction material field (100% missing data). Rather than imputing material types, this flag was deliberately parked until reliable metadata is available.
+    - **Regional Flood History:** A historical flag surfaces bridges located in regions affected by the October 2022 Victorian floods (which impacted 63 of 79 municipalities). This is provided as static context for historical exposure, distinct from the dynamic climate risk metric.
+    """
+)
+
 st.header("Sources")
 st.caption(
     "Victorian Auditor-General's Office (2011), *Management of Road Bridges*, and "

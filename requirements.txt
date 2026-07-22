@@ -1,4 +1,6 @@
-streamlit
 pandas
+streamlit
 folium
 streamlit-folium
+pytest
+fpdf2

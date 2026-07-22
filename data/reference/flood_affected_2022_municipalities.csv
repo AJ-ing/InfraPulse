@@ -1,0 +1,8 @@
+REGION_PHYS,flood_affected_2022,notes
+HUME,True,"Contains heavily affected municipalities (e.g., Greater Shepparton, Campaspe, Mitchell)."
+LODDON MALLEE,True,"Contains heavily affected municipalities (e.g., Campaspe, Loddon, Swan Hill)."
+GRAMPIANS,True,"Contains affected municipalities (e.g., Northern Grampians, Pyrenees)."
+GIPPSLAND,True,"Contains some affected municipalities (e.g., Baw Baw)."
+BARWON SOUTH WEST,True,"Contains some affected municipalities."
+GREATER METRO,False,"Largely unaffected by the Oct 2022 riverine floods."
+INNER METRO,False,"Unaffected by the Oct 2022 riverine floods."
