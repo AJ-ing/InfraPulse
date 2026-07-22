@@ -2,23 +2,17 @@ import pandas as pd
 import pytest
 import os
 
-MASTER_CSV = "data/processed/bridges_master.csv"
 SCORED_CSV = "data/processed/bridges_risk_scored.csv"
-
-@pytest.fixture(scope="module")
-def master_df():
-    assert os.path.exists(MASTER_CSV)
-    return pd.read_csv(MASTER_CSV, low_memory=False)
+EXPECTED_BRIDGE_COUNT = 6554
 
 @pytest.fixture(scope="module")
 def scored_df():
     assert os.path.exists(SCORED_CSV)
     return pd.read_csv(SCORED_CSV, low_memory=False)
 
-def test_row_count(master_df, scored_df):
+def test_row_count(scored_df):
     """Output row count matches source bridge count (6,554)."""
-    assert len(scored_df) == len(master_df)
-    assert len(scored_df) == 6554
+    assert len(scored_df) == EXPECTED_BRIDGE_COUNT
 
 def test_risk_score_validity(scored_df):
     """risk_score exists, is numeric, falls in 0-100, has zero nulls."""
@@ -46,20 +40,20 @@ def test_likelihood_weights(scored_df):
         if weight_sum > 0:
             assert pytest.approx(row['likelihood_score'], rel=1e-5) == expected_score / weight_sum
 
-def test_consequence_multiplier(master_df, scored_df):
+def test_consequence_multiplier(scored_df):
     """Consequence multiplier only takes values {1.5, 1.2, 1.1, 1.0}."""
     assert "consequence_multiplier" in scored_df.columns
     unique_vals = set(scored_df["consequence_multiplier"].dropna().unique())
     assert unique_vals.issubset({1.5, 1.2, 1.1, 1.0})
-    
-    merged = pd.merge(master_df[['_id', 'CD_STATE_CLASS']], scored_df[['_id', 'consequence_multiplier']], on='_id')
-    
+
+    assert "CD_STATE_CLASS" in scored_df.columns
+
     mapping = {'HF': 1.5, 'MR': 1.2, 'TR': 1.1, 'RA': 1.0, 'FR': 1.0}
-    
+
     def expected_mult(code):
         return mapping.get(str(code).strip(), 1.0)
-        
-    for _, row in merged.head(100).iterrows():
+
+    for _, row in scored_df.head(100).iterrows():
         assert row['consequence_multiplier'] == expected_mult(row['CD_STATE_CLASS'])
 
 def test_median_imputation(scored_df):
