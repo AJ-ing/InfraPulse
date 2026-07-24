@@ -2,6 +2,20 @@ from fpdf import FPDF
 import pandas as pd
 import io
 
+def _pdf_safe(text) -> str:
+    """Convert text to ASCII-safe form for FPDF's built-in Latin-1 fonts."""
+    if text is None or (isinstance(text, float) and pd.isna(text)):
+        return ""
+    s = str(text)
+    return (
+        s.replace("\u2013", "-")   # en dash
+         .replace("\u2014", "-")   # em dash
+         .replace("\u2018", "'")   # left single quote
+         .replace("\u2019", "'")   # right single quote
+         .replace("\u201c", '"')   # left double quote
+         .replace("\u201d", '"')   # right double quote
+    )
+
 class PDF(FPDF):
     def header(self):
         self.set_font('Arial', 'B', 15)
@@ -21,7 +35,7 @@ def generate_region_pdf(df: pd.DataFrame, filters_text: str = "") -> bytes:
     pdf.cell(0, 10, "Filtered View Summary", 0, 1)
     
     pdf.set_font("Arial", '', 10)
-    pdf.multi_cell(0, 10, f"Filters applied: {filters_text}")
+    pdf.multi_cell(0, 10, _pdf_safe(f"Filters applied: {filters_text}"))
     pdf.cell(0, 10, f"Total bridges shown: {len(df)}", 0, 1)
     if not df.empty:
         pdf.cell(0, 10, f"Average Risk Score: {df['risk_score'].mean():.1f}", 0, 1)
@@ -46,12 +60,12 @@ def generate_region_pdf(df: pd.DataFrame, filters_text: str = "") -> bytes:
     top_20 = df.sort_values('risk_score', ascending=False).head(20)
     
     for _, row in top_20.iterrows():
-        name = str(row.get('Name', ''))[:20]
-        region = str(row.get('REGION_PHYS', ''))[:15]
-        s_class = str(row.get('CD_STATE_CLASS', ''))[:10]
-        tier = str(row.get('risk_tier', ''))
+        name = _pdf_safe(row.get('Name', ''))[:20]
+        region = _pdf_safe(row.get('REGION_PHYS', ''))[:15]
+        s_class = _pdf_safe(row.get('CD_STATE_CLASS', ''))[:10]
+        tier = _pdf_safe(row.get('risk_tier', ''))
         score = f"{row.get('risk_score', 0):.1f}"
-        priority = str(row.get('inspection_priority', ''))[:15]
+        priority = _pdf_safe(row.get('inspection_priority', ''))[:20]
         
         pdf.cell(col_width, 10, name, border=1)
         pdf.cell(col_width, 10, region, border=1)
@@ -68,7 +82,7 @@ def generate_bridge_pdf(bridge_row: pd.Series) -> bytes:
     pdf.add_page()
     
     pdf.set_font("Arial", 'B', 14)
-    pdf.cell(0, 10, f"Bridge Profile: {bridge_row.get('Name', 'Unknown')}", 0, 1)
+    pdf.cell(0, 10, _pdf_safe(f"Bridge Profile: {bridge_row.get('Name', 'Unknown')}"), 0, 1)
     pdf.ln(5)
     
     pdf.set_font("Arial", '', 11)
@@ -77,7 +91,7 @@ def generate_bridge_pdf(bridge_row: pd.Series) -> bytes:
         pdf.set_font("Arial", 'B', 11)
         pdf.cell(50, 10, f"{label}:", 0, 0)
         pdf.set_font("Arial", '', 11)
-        pdf.cell(0, 10, str(value), 0, 1)
+        pdf.cell(0, 10, _pdf_safe(value), 0, 1)
         
     add_field("Region", bridge_row.get('REGION_PHYS', 'N/A'))
     add_field("Road Class", bridge_row.get('CD_STATE_CLASS', 'N/A'))
